@@ -2,7 +2,7 @@
 title:               "Maverick's Quest"
 tagline:             "Writing by Mikhail's Turilin"
 description:         'Description will go here'
-url:                 https://mturilin.github.io
+url:                 https://maverick.quest
 baseurl:             ''
 paginate:            5
 permalink:           pretty
