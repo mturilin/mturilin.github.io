@@ -101,7 +101,7 @@ body {
   gap: 1.2rem;
 }
 
-.lede {                    
+.intro {                    
   flex-basis: 100%;           /* forces its own line under the banner */
   font-family: var(--sans);
   font-size: 0.93rem;
@@ -450,10 +450,10 @@ body {
 }
 
 /* ---- article standfirst ----------------------------------------- */
-/* The post's lede again, above the body: it is the promise the article makes,
+/* The post's description again, above the body: it is the promise the article makes,
    and a reader arriving from a feed or a search result has not seen the index. */
 
-.post-lede {
+.post-intro {
   font-size: 1.2rem;
   font-weight: 600;
   line-height: 1.52;

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "What Platform Teams Owe Their Customers"
-lede: "Demo filler, so the index shows its real shape with several entries. Not part of the published site."
+description: "Demo filler, so the index shows its real shape with several entries. Not part of the published site."
 date: 2025-11-14 10:00:00 +0200
 ---
 

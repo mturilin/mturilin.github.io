@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% if page.title and page.url != '/' %}{{ page.title }} &middot; {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-<meta name="description" content="{{ page.lede | default: site.description }}">
+<meta name="description" content="{{ page.description | default: site.description }}">
 {%- feed_meta %}
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 <!-- Applies a stored theme choice before first paint. Without this the page
@@ -29,7 +29,7 @@
         <img src="{{ '/assets/img/banner-1440.jpg' | relative_url }}" width="2048" height="768" alt="{{ site.title }}" fetchpriority="high">
       </picture>
     </a>
-    <p class="lede">{{ site.lede }}</p>
+    <p class="intro">{{ site.intro }}</p>
 {%- endif %}
   </header>
 

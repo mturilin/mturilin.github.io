@@ -6,8 +6,8 @@ layout: default
   <li>
     <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%b %-d, %Y' }}</time>
     <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-    {%- if post.lede %}
-    <p>{{ post.lede }}</p>
+    {%- if post.description %}
+    <p>{{ post.description }}</p>
     {%- endif %}
   </li>
 {%- endfor %}

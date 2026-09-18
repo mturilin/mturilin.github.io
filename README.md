@@ -18,7 +18,7 @@ with front matter:
 ---
 title: "Article Title"
 date: 2026-09-18 17:54:53 +0200
-lede: "One or two sentences shown under the title on the index."
+description: "One or two sentences shown under the title on the index."
 ---
 ```
 
@@ -31,14 +31,13 @@ Rules that matter:
 - **No `# Title` heading in the body.** `_layouts/post.html` already renders the
   front-matter `title` as the page `<h1>`; a heading in the body duplicates it.
 - **Future-dated posts stay unpublished** until the date passes.
-- **Write a `lede:` for every post.** It appears under the title on the index and
-  becomes that page's `<meta name="description">`. Jekyll can derive an excerpt
-  automatically, but it takes the first paragraph, which is usually an aside
-  rather than a hook — the existing essay opens on a note about its sources.
-- **`lede:` does not reach the RSS feed.** `jekyll-feed` looks for `description:`
-  or falls back to the auto-excerpt, and it has no way to know about a custom
-  field. Feed summaries are therefore first paragraphs. Add `description:` to a
-  post as well if a particular one matters in feed readers.
+- **Write a `description:` for every post.** One field, three jobs: it appears
+  under the title on the index, is repeated as the standfirst above the article,
+  and becomes both `<meta name="description">` and the RSS summary. Jekyll can
+  derive an excerpt automatically, but it takes the first paragraph, which is
+  usually an aside rather than a hook — the existing essay opens on a note about
+  its sources. The field is named `description` precisely because that is what
+  `jekyll-feed` reads; any other name silently loses the feed summary.
 
 ## Local preview
 
@@ -75,9 +74,9 @@ so structural layout changes must be made in both places. Liquid behaviour
 Two things are added to every post automatically — neither needs anything in the
 markdown.
 
-**The standfirst.** `lede:` is rendered again above the body, semibold. Readers
-arriving from RSS or a search result never see the index, so this is the only
-place the lede reaches them.
+**The standfirst.** The post's `description:` is rendered again above the body,
+semibold. Readers arriving from RSS or a search result never see the index, so
+this is the only place it reaches them.
 
 **The contents box.** `_layouts/post.html` carries a small script that builds a
 nav from the article's `h2` elements. Kramdown gives every heading an `id`; the
@@ -106,7 +105,7 @@ done
 
 That takes 1994 KB down to 92 KB at 1440px. Regenerate after replacing the source.
 
-The banner and the site `lede` render on the home page only, guarded by
+The banner and the site `intro` render on the home page only, guarded by
 `{% if page.url == '/' %}` in `_layouts/default.html`. The wordmark is inside the
 artwork, but the text title stays above it so every page carries the same
 title-and-nav row. Article pages get neither — identity only needs establishing
@@ -127,9 +126,9 @@ Tunable at the top of `assets/css/main.css`:
 | `--measure` | Column width |
 | `--serif` | Body and heading face (Source Serif 4) |
 
-`_config.yml` carries two descriptions on purpose: `lede` is the full statement
-rendered under the banner, and `description` is a ~130-character version for
-`<meta>` and RSS, which both truncate near 155.
+`_config.yml` carries two on purpose: `intro` is the full statement rendered
+under the banner, and `description` is a ~130-character version for `<meta>` and
+RSS, which both truncate near 155.
 
 Light and dark are defined as three CSS states: bare `:root` is light, the OS
 preference applies unless the reader explicitly chose light, and an explicit dark

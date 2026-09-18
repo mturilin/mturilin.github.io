@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Roadmap Is Not a Promise"
-lede: "Demo filler, so the index shows its real shape with several entries. Not part of the published site."
+description: "Demo filler, so the index shows its real shape with several entries. Not part of the published site."
 date: 2026-05-03 10:00:00 +0200
 ---
 

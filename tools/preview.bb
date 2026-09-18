@@ -23,9 +23,9 @@
 (def posts-dirs (if (seq *command-line-args*) *command-line-args* [(str repo "/_posts")]))
 (def out (str repo "/tools/_preview"))
 (def site-title "sodapop")
-;; Mirrors site.lede in _config.yml. Duplicated because this script cannot read
-;; Liquid; if the real lede changes, change it here too.
-(def site-lede
+;; Mirrors site.intro in _config.yml. Duplicated because this script cannot read
+;; Liquid; if the real intro changes, change it here too.
+(def site-intro
   (str "This blog collects articles written by AI from my detailed prompts. Gathering "
        "sources and organising them into clusters of themes is a surprisingly good way "
        "to learn a new subject &mdash; it stays balanced, and holds several points of view "
@@ -74,7 +74,7 @@
          "<circle cx=\"8\" cy=\"8\" r=\"6.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/>"
          "<path d=\"M8 1.6a6.4 6.4 0 0 1 0 12.8z\" fill=\"currentColor\"/></svg></button>\n"
          "    </nav>\n"
-         ;; banner and lede are home-only, matching the {% if page.url == '/' %}
+         ;; banner and intro are home-only, matching the {% if page.url == '/' %}
          ;; guard in _layouts/default.html
          (when (= here :home)
            (str "    <a class=\"banner\" href=\"" root "index.html\">\n"
@@ -82,7 +82,7 @@
                 "        <source type=\"image/webp\" srcset=\"" root "assets/img/banner-1440.webp 1440w, " root "assets/img/banner-2048.webp 2048w\" sizes=\"(max-width: 47rem) 100vw, 45rem\">\n"
                 "        <img src=\"" root "assets/img/banner-1440.jpg\" width=\"2048\" height=\"768\" alt=\"" site-title "\" fetchpriority=\"high\">\n"
                 "      </picture>\n    </a>\n"
-                "    <p class=\"lede\">" site-lede "</p>\n"))
+                "    <p class=\"intro\">" site-intro "</p>\n"))
          "  </header>\n  <main>\n" body "\n  </main>\n"
          "  <footer class=\"foot\"><span>&copy; 2026 Mikhail Turilin</span></footer>\n"
          "</div>\n"
@@ -116,10 +116,10 @@
        "addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(sync)}},{passive:true});\n"
        "sync();})();\n</script>\n"))
 
-(defn item [{:keys [slug title date lede]}]
+(defn item [{:keys [slug title date description]}]
   (str "    <li>\n      <time>" (pretty-date date) "</time>\n"
        "      <a href=\"posts/" slug ".html\">" title "</a>\n"
-       (when lede (str "      <p>" lede "</p>\n"))
+       (when description (str "      <p>" description "</p>\n"))
        "    </li>\n"))
 
 (def posts
@@ -130,7 +130,7 @@
                 {:slug (str/replace (subs f 11) #"\.md$" "")
                  :title (:title meta)
                  :date (or (:date meta) (subs f 0 10))
-                 :lede (:lede meta)
+                 :description (:description meta)
                  :html (md->html body)})))
        (sort-by :date) reverse))
 
@@ -153,7 +153,7 @@
                         (str "  <section class=\"year\">\n    <h2>" y "</h2>\n    <ul class=\"post-list\">\n"
                              (str/join (map item g)) "    </ul>\n  </section>\n")))}))
 
-(doseq [{:keys [slug title date html lede]} posts]
+(doseq [{:keys [slug title date html description]} posts]
   (spit (str out "/posts/" slug ".html")
         ;; depth 1 so ../ resolves back to the preview root
         (layout {:title (str title " &middot; " site-title) :depth 1
@@ -161,7 +161,7 @@
                             "    <h1 class=\"post-title\">" title "</h1>\n"
                             "    <div class=\"post-date\"><time>" (pretty-date date) "</time></div>\n"
                             "  </header>\n"
-                            (when lede (str "  <p class=\"post-lede\">" lede "</p>\n"))
+                            (when description (str "  <p class=\"post-intro\">" description "</p>\n"))
                             "  <div class=\"post-body\">\n" html "  </div>\n</article>\n"
                             toc-script)})))
 

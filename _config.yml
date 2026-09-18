@@ -7,7 +7,7 @@ description: >-
   clustered by theme, as a way into an unfamiliar subject.
 
 # Long form: rendered under the banner on the home page only.
-lede: >-
+intro: >-
   This blog collects articles written by AI from my detailed prompts. Gathering
   sources and organising them into clusters of themes is a surprisingly good way
   to learn a new subject — it stays balanced, and holds several points of view at
