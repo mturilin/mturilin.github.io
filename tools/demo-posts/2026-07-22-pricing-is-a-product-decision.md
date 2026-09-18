@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Pricing Is a Product Decision, Not a Finance One"
+lede: "Demo filler, so the index shows its real shape with several entries. Not part of the published site."
 date: 2026-07-22 10:00:00 +0200
 ---
 

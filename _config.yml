@@ -1,6 +1,18 @@
 # Site
 title:       sodapop
-description: Strategy and product articles.
+# Short form: <meta name="description"> and the RSS feed, both of which cut off
+# around 155 characters.
+description: >-
+  Articles written by AI from my detailed prompts — sources gathered and
+  clustered by theme, as a way into an unfamiliar subject.
+
+# Long form: rendered under the banner on the home page only.
+lede: >-
+  This blog collects articles written by AI from my detailed prompts. Gathering
+  sources and organising them into clusters of themes is a surprisingly good way
+  to learn a new subject — it stays balanced, and holds several points of view at
+  once instead of settling early on one. I don't plan to post regularly or stick
+  to a topic. These are simply the ones I found interesting enough to publish.
 url:         https://mturilin.github.io
 baseurl:     ''               # user site serves at the root, so no subpath
 permalink:   pretty

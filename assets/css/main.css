@@ -101,34 +101,24 @@ body {
   gap: 1.2rem;
 }
 
-.tagline {                    /* currently unused - markup is off, rule kept for easy restore */
-  flex-basis: 100%;           /* forces its own line under the row */
+.lede {                    
+  flex-basis: 100%;           /* forces its own line under the banner */
   font-family: var(--sans);
-  font-size: 0.84rem;
+  font-size: 0.93rem;
   color: var(--muted);
   margin: 0;
-  line-height: 1.5;
-  max-width: 30rem;
+  line-height: 1.62;
+  max-width: 38rem;
 }
 .nav a { color: var(--muted); text-decoration: none; }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--accent); }
 
 /* ---- post list (index + archive) ------------------------------- */
 
-.list-heading {
-  font-family: var(--sans);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 1.25rem;
-}
-
 .post-list { list-style: none; margin: 0; padding: 0; }
 
 .post-list li {
-  padding: 0.85rem 0;
+  padding: 1.15rem 0;
   border-bottom: 1px solid var(--rule);
 }
 .post-list li:first-child { border-top: 1px solid var(--rule); }
@@ -150,6 +140,13 @@ body {
   letter-spacing: -0.01em;
 }
 .post-list a:hover { color: var(--accent); }
+
+.post-list p {
+  margin: 0.3rem 0 0;
+  font-size: 0.97rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
 
 .list-more {
   font-family: var(--sans);
@@ -355,3 +352,31 @@ body {
   .post-title { font-size: 1.75rem; }
   body { font-size: 1.08rem; }
 }
+
+/* ---- banner ---------------------------------------------------- */
+/* Home masthead stacks: the standard title + nav row, then the banner, then
+   the description. The base .masthead flex row already does this - the banner
+   and the tagline each claim a full line, so title and nav still share one. */
+
+.masthead--home { padding-bottom: 0; border-bottom: 0; }
+
+.masthead .banner {
+  flex-basis: 100%;
+  display: block;
+  border-top: 1px solid var(--rule);   /* the rule that closes the title + nav row */
+  padding-top: 1.15rem;
+  margin: 1.15rem 0 1.1rem;
+}
+.banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* The artwork is high-key; at full brightness it glares against a dark page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .banner img { filter: brightness(0.86) saturate(0.94); }
+}
+:root[data-theme="dark"] .banner img { filter: brightness(0.86) saturate(0.94); }
+

@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% if page.title and page.url != '/' %}{{ page.title }} &middot; {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-{%- if page.description or site.description %}
-<meta name="description" content="{{ page.description | default: site.description }}">
-{%- endif %}
+<meta name="description" content="{{ page.lede | default: site.description }}">
 {%- feed_meta %}
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 <!-- Applies a stored theme choice before first paint. Without this the page
@@ -16,7 +14,7 @@
 <body>
 <div class="wrap">
 
-  <header class="masthead">
+  <header class="masthead{% if page.url == '/' %} masthead--home{% endif %}">
     <h1 class="site-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
     <nav class="nav">
       <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
@@ -24,6 +22,15 @@
       <a href="{{ '/feed.xml' | relative_url }}">Feed</a>
       <button class="theme-toggle" type="button" hidden title="Switch theme"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.6a6.4 6.4 0 0 1 0 12.8z" fill="currentColor"/></svg></button>
     </nav>
+{%- if page.url == '/' %}
+    <a class="banner" href="{{ '/' | relative_url }}">
+      <picture>
+        <source type="image/webp" srcset="{{ '/assets/img/banner-1440.webp' | relative_url }} 1440w, {{ '/assets/img/banner-2048.webp' | relative_url }} 2048w" sizes="(max-width: 47rem) 100vw, 45rem">
+        <img src="{{ '/assets/img/banner-1440.jpg' | relative_url }}" width="2048" height="768" alt="{{ site.title }}" fetchpriority="high">
+      </picture>
+    </a>
+    <p class="lede">{{ site.lede }}</p>
+{%- endif %}
   </header>
 
   <main>

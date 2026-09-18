@@ -23,6 +23,14 @@
 (def posts-dirs (if (seq *command-line-args*) *command-line-args* [(str repo "/_posts")]))
 (def out (str repo "/tools/_preview"))
 (def site-title "sodapop")
+;; Mirrors site.lede in _config.yml. Duplicated because this script cannot read
+;; Liquid; if the real lede changes, change it here too.
+(def site-lede
+  (str "This blog collects articles written by AI from my detailed prompts. Gathering "
+       "sources and organising them into clusters of themes is a surprisingly good way "
+       "to learn a new subject &mdash; it stays balanced, and holds several points of view "
+       "at once instead of settling early on one. I don&rsquo;t plan to post regularly or "
+       "stick to a topic. These are simply the ones I found interesting enough to publish."))
 
 (defn front-matter
   "Splits a post file into [metadata-map body-markdown]. Handles only the flat
@@ -55,7 +63,7 @@
          "<link rel=\"stylesheet\" href=\"" root "assets/css/main.css\">\n"
          "<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>\n"
          "</head>\n<body>\n<div class=\"wrap\">\n"
-         "  <header class=\"masthead\">\n"
+         "  <header class=\"masthead" (when (= here :home) " masthead--home") "\">\n"
          "    <h1 class=\"site-title\"><a href=\"" root "index.html\">" site-title "</a></h1>\n"
          "    <nav class=\"nav\">\n"
          "      <a href=\"" root "index.html\"" (when (= here :home) " aria-current=\"page\"") ">Home</a>\n"
@@ -65,7 +73,17 @@
          "<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" focusable=\"false\">"
          "<circle cx=\"8\" cy=\"8\" r=\"6.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/>"
          "<path d=\"M8 1.6a6.4 6.4 0 0 1 0 12.8z\" fill=\"currentColor\"/></svg></button>\n"
-         "    </nav>\n  </header>\n  <main>\n" body "\n  </main>\n"
+         "    </nav>\n"
+         ;; banner and lede are home-only, matching the {% if page.url == '/' %}
+         ;; guard in _layouts/default.html
+         (when (= here :home)
+           (str "    <a class=\"banner\" href=\"" root "index.html\">\n"
+                "      <picture>\n"
+                "        <source type=\"image/webp\" srcset=\"" root "assets/img/banner-1440.webp 1440w, " root "assets/img/banner-2048.webp 2048w\" sizes=\"(max-width: 47rem) 100vw, 45rem\">\n"
+                "        <img src=\"" root "assets/img/banner-1440.jpg\" width=\"2048\" height=\"768\" alt=\"" site-title "\" fetchpriority=\"high\">\n"
+                "      </picture>\n    </a>\n"
+                "    <p class=\"lede\">" site-lede "</p>\n"))
+         "  </header>\n  <main>\n" body "\n  </main>\n"
          "  <footer class=\"foot\"><span>&copy; 2026 Mikhail Turilin</span></footer>\n"
          "</div>\n"
          "<script>\n"
@@ -78,9 +96,11 @@
          "root.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}label()});\n"
          "})();\n</script>\n</body>\n</html>\n")))
 
-(defn item [{:keys [slug title date]}]
+(defn item [{:keys [slug title date lede]}]
   (str "    <li>\n      <time>" (pretty-date date) "</time>\n"
-       "      <a href=\"posts/" slug ".html\">" title "</a>\n    </li>\n"))
+       "      <a href=\"posts/" slug ".html\">" title "</a>\n"
+       (when lede (str "      <p>" lede "</p>\n"))
+       "    </li>\n"))
 
 (def posts
   (->> (mapcat #(fs/glob % "*.md") posts-dirs)
@@ -90,6 +110,7 @@
                 {:slug (str/replace (subs f 11) #"\.md$" "")
                  :title (:title meta)
                  :date (or (:date meta) (subs f 0 10))
+                 :lede (:lede meta)
                  :html (md->html body)})))
        (sort-by :date) reverse))
 
@@ -97,11 +118,13 @@
 (fs/create-dirs (str out "/assets/css"))
 (fs/copy (str repo "/assets/css/main.css") (str out "/assets/css/main.css")
          {:replace-existing true})
+(fs/create-dirs (str out "/assets/img"))
+(doseq [n ["banner-1440.webp" "banner-2048.webp" "banner-1440.jpg"]]
+  (fs/copy (str repo "/assets/img/" n) (str out "/assets/img/" n) {:replace-existing true}))
 
 (spit (str out "/index.html")
       (layout {:title site-title :here :home :depth 0
-               :body (str "<h2 class=\"list-heading\">Posts</h2>\n  <ul class=\"post-list\">\n"
-                          (str/join (map item posts)) "  </ul>")}))
+               :body (str "  <ul class=\"post-list\">\n" (str/join (map item posts)) "  </ul>")}))
 
 (spit (str out "/archive.html")
       (layout {:title (str "Archive &middot; " site-title) :here :archive :depth 0

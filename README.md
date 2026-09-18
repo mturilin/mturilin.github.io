@@ -18,6 +18,7 @@ with front matter:
 ---
 title: "Article Title"
 date: 2026-09-18 17:54:53 +0200
+lede: "One or two sentences shown under the title on the index."
 ---
 ```
 
@@ -30,8 +31,14 @@ Rules that matter:
 - **No `# Title` heading in the body.** `_layouts/post.html` already renders the
   front-matter `title` as the page `<h1>`; a heading in the body duplicates it.
 - **Future-dated posts stay unpublished** until the date passes.
-- **`excerpt:` is optional.** Nothing renders it — the index shows titles only —
-  but `jekyll-feed` uses it for the RSS summary, and search engines for snippets.
+- **Write a `lede:` for every post.** It appears under the title on the index and
+  becomes that page's `<meta name="description">`. Jekyll can derive an excerpt
+  automatically, but it takes the first paragraph, which is usually an aside
+  rather than a hook — the existing essay opens on a note about its sources.
+- **`lede:` does not reach the RSS feed.** `jekyll-feed` looks for `description:`
+  or falls back to the auto-excerpt, and it has no way to know about a custom
+  field. Feed summaries are therefore first paragraphs. Add `description:` to a
+  post as well if a particular one matters in feed readers.
 
 ## Local preview
 
@@ -60,7 +67,30 @@ so structural layout changes must be made in both places. Liquid behaviour
 | `index.html` | Ten most recent posts, titles only |
 | `archive.html` | Every post, grouped by year, at `/archive/` |
 | `assets/css/main.css` | The entire design |
+| `assets/img/` | Banner source plus its generated derivatives |
 | `tools/` | Local preview script and filler posts. Excluded from the Jekyll build |
+
+## Banner
+
+`assets/img/banner.png` is the 2048x768 source, kept in the repo so the artwork can
+be re-derived if the CSS sizes change. Nothing on the site loads it — it is 2 MB.
+What the page serves is the derivative set, WebP with a JPEG fallback and a
+`srcset` for 1x/2x:
+
+```bash
+for w in 1440 2048; do
+  magick assets/img/banner.png -resize ${w}x -strip -quality 82 assets/img/banner-${w}.webp
+  magick assets/img/banner.png -resize ${w}x -strip -quality 80 -interlace Plane assets/img/banner-${w}.jpg
+done
+```
+
+That takes 1994 KB down to 92 KB at 1440px. Regenerate after replacing the source.
+
+The banner and the site `lede` render on the home page only, guarded by
+`{% if page.url == '/' %}` in `_layouts/default.html`. The wordmark is inside the
+artwork, but the text title stays above it so every page carries the same
+title-and-nav row. Article pages get neither — identity only needs establishing
+once, and a 270px illustration before a 7,000-word essay is a toll.
 
 ## Design
 
@@ -76,6 +106,10 @@ Tunable at the top of `assets/css/main.css`:
 | `--accent` | The blue: wordmark, all headings, links, list markers, archive year rules |
 | `--measure` | Column width |
 | `--serif` | Body and heading face (Source Serif 4) |
+
+`_config.yml` carries two descriptions on purpose: `lede` is the full statement
+rendered under the banner, and `description` is a ~130-character version for
+`<meta>` and RSS, which both truncate near 155.
 
 Light and dark are defined as three CSS states: bare `:root` is light, the OS
 preference applies unless the reader explicitly chose light, and an explicit dark

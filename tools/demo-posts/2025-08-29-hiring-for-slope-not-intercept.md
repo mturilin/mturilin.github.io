@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Hiring for Slope, Not Intercept"
+lede: "Demo filler, so the index shows its real shape with several entries. Not part of the published site."
 date: 2025-08-29 10:00:00 +0200
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title: "How to Think When You Don’t Know"
 date: 2026-09-18 17:54:53 +0200
-excerpt: "Most important business decisions have to be made before the facts are available — and once the outcome is visible, it becomes difficult to reconstruct what was actually knowable beforehand. A practical loop for deciding, and learning, under uncertainty."
+lede: "Most important business decisions have to be made before the facts are available — and once the outcome is visible, it becomes difficult to reconstruct what was actually knowable beforehand. A practical loop for deciding, and learning, under uncertainty."
 ---
 
 *This essay began with a simple question: could the useful ideas in Annie Duke’s* Thinking in Bets *be expressed more crisply than they are in a full book? The answer led somewhere broader. The framework below draws on Duke’s distinction between decision quality and outcome quality; Daniel Kahneman and Amos Tversky’s work on judgment under uncertainty; Philip Tetlock’s research on probabilistic forecasting and calibration; Gary Klein’s premortem; Ray Dalio’s idea of believability-weighted judgment; Amazon’s language of one-way and two-way doors and “disagree and commit”; and the strategy literature on real options. The goal is not to summarize those thinkers one by one. It is to combine the strongest parts into a practical system for making consequential business decisions when the answer is not yet knowable.*
