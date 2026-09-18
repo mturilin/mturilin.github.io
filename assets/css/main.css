@@ -1,0 +1,357 @@
+/* ---------------------------------------------------------------
+   Minimal essay theme
+   What  : the entire visual design for the blog - index, archive, post.
+   Why   : a hand-written theme avoids the Jekyll-4 and baseurl problems
+           that off-the-shelf themes (Klise, Lanyon) introduced, and keeps
+           the surface to one file we control.
+   Notes : colours are CSS custom properties so light/dark and the blue
+           heading accent are each a single line to retune.
+   --------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
+
+:root {
+  --bg:        #fdfdfb;
+  --fg:        #1b1b19;
+  --muted:     #75746e;
+  --rule:      #e6e5e0;
+  --accent:    #1e4b8f;          /* blueish headings + links */
+  --accent-dim:#3f6cae;
+  --measure:   45rem;
+  --serif: "Source Serif 4", Iowan Old Style, Palatino, Georgia, serif;
+  --sans:  ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Dark palette. Declared twice on purpose - CSS cannot reuse a token block:
+   1. the OS preference applies UNLESS the reader explicitly chose light
+   2. an explicit choice of dark must win even on a light OS setting
+   Light is the bare :root above, so an explicit light choice needs no rule. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #14161a;
+    --fg:        #d8d6d1;
+    --muted:     #8b8983;
+    --rule:      #292d34;
+    --accent:    #82aae2;
+    --accent-dim:#a9c6ee;
+  }
+}
+:root[data-theme="dark"] {
+    --bg:        #14161a;
+    --fg:        #d8d6d1;
+    --muted:     #8b8983;
+    --rule:      #292d34;
+    --accent:    #82aae2;
+    --accent-dim:#a9c6ee;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.72;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+}
+
+/* ---- header ---------------------------------------------------- */
+
+/* Wordmark and nav share one baseline row; the tagline takes a full-width
+   line beneath by flex-basis, so DOM order still matches reading order. */
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 1.5rem;
+  margin-bottom: 3.75rem;
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.site-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0;
+  line-height: 1.3;
+}
+.site-title a { color: var(--accent); text-decoration: none; }
+.site-title a:hover { color: var(--accent-dim); }
+
+.nav {
+  margin-left: auto;          /* pins nav to the right of the wordmark row */
+  font-family: var(--sans);
+  font-size: 0.83rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.tagline {                    /* currently unused - markup is off, rule kept for easy restore */
+  flex-basis: 100%;           /* forces its own line under the row */
+  font-family: var(--sans);
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 30rem;
+}
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a:hover, .nav a[aria-current="page"] { color: var(--accent); }
+
+/* ---- post list (index + archive) ------------------------------- */
+
+.list-heading {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.25rem;
+}
+
+.post-list { list-style: none; margin: 0; padding: 0; }
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.post-list li:first-child { border-top: 1px solid var(--rule); }
+
+.post-list time {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.15rem;
+}
+
+.post-list a {
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 1.14rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.post-list a:hover { color: var(--accent); }
+
+.list-more {
+  font-family: var(--sans);
+  font-size: 0.83rem;
+  margin: 1.5rem 0 0;
+}
+.list-more a { color: var(--accent); text-decoration: none; }
+.list-more a:hover { text-decoration: underline; }
+
+/* archive years */
+.year { margin-top: 3rem; }
+.year:first-of-type { margin-top: 0; }
+.year > h2 {
+  font-size: 1.05rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+
+/* ---- article --------------------------------------------------- */
+
+.post-header { margin-bottom: 2.5rem; }
+
+.post-title {
+  font-size: 2.15rem;
+  line-height: 1.16;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+  text-wrap: balance;
+}
+
+.post-date {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+.post-body > *:first-child { margin-top: 0; }
+
+.post-body h2 {
+  font-size: 1.5rem;
+  line-height: 1.28;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--accent);
+  margin: 3rem 0 0.85rem;
+  text-wrap: balance;
+}
+
+.post-body h3 {
+  font-size: 1.2rem;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  color: var(--accent);
+  margin: 2.25rem 0 0.6rem;
+}
+
+.post-body h4 {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2rem 0 0.5rem;
+}
+
+.post-body p { margin: 0 0 1.35rem; }
+
+.post-body a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.post-body a:hover { color: var(--accent-dim); }
+
+.post-body strong { font-weight: 700; }
+.post-body em { font-style: italic; }
+
+.post-body ul, .post-body ol { margin: 0 0 1.35rem; padding-left: 1.4rem; }
+.post-body li { margin-bottom: 0.5rem; }
+.post-body li::marker { color: var(--accent); font-weight: 600; }
+
+.post-body blockquote {
+  margin: 1.8rem 0;
+  padding: 0.2rem 0 0.2rem 1.4rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+  font-style: italic;
+}
+.post-body blockquote p:last-child { margin-bottom: 0; }
+
+.post-body hr {
+  border: 0;
+  height: 1px;
+  background: var(--rule);
+  margin: 3rem 0;
+}
+
+.post-body code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  padding: 0.12em 0.36em;
+  border-radius: 3px;
+}
+.post-body pre {
+  font-family: var(--mono);
+  font-size: 0.83rem;
+  line-height: 1.6;
+  background: color-mix(in srgb, var(--fg) 5%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  margin: 0 0 1.35rem;
+}
+.post-body pre code { background: none; padding: 0; font-size: inherit; }
+
+/* ---- pictures -------------------------------------------------- */
+
+.post-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem auto;
+  border-radius: 6px;
+}
+
+.post-body figure {
+  margin: 2.25rem 0;
+}
+.post-body figure img { margin: 0 0 0.6rem; }
+
+.post-body figcaption {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* wide images break the measure on large screens */
+@media (min-width: 60rem) {
+  .post-body .wide {
+    width: calc(var(--measure) + 8rem);
+    max-width: calc(100vw - 3rem);
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* ---- theme switcher -------------------------------------------- */
+
+.theme-toggle {
+  margin-left: 0.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.theme-toggle:hover { color: var(--accent); }
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.theme-toggle svg { width: 0.95em; height: 0.95em; display: block; }
+
+/* Without JS the control cannot work, so it stays hidden until JS unhides it. */
+.theme-toggle[hidden] { display: none; }
+
+/* ---- footer ---------------------------------------------------- */
+
+.foot {
+  margin-top: 5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.foot a { color: var(--muted); }
+.foot a:hover { color: var(--accent); }
+
+@media (max-width: 34rem) {
+  .wrap { padding: 2.5rem 1.15rem 4rem; }
+  .nav { margin-left: 0; flex-basis: 100%; }
+  .post-title { font-size: 1.75rem; }
+  body { font-size: 1.08rem; }
+}

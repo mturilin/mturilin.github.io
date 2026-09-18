@@ -1,0 +1,23 @@
+---
+layout: default
+title: Archive
+permalink: /archive/
+---
+{%- comment %}
+  site.posts is already newest-first, so grouping preserves that order and the
+  years come out descending without an extra sort.
+{%- endcomment %}
+{%- assign years = site.posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
+{%- for year in years %}
+<section class="year">
+  <h2>{{ year.name }}</h2>
+  <ul class="post-list">
+  {%- for post in year.items %}
+    <li>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%b %-d, %Y' }}</time>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    </li>
+  {%- endfor %}
+  </ul>
+</section>
+{%- endfor %}

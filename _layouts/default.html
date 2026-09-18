@@ -1,31 +1,47 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title and page.url != '/' %}{{ page.title }} &middot; {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+{%- if page.description or site.description %}
+<meta name="description" content="{{ page.description | default: site.description }}">
+{%- endif %}
+{%- feed_meta %}
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+<!-- Applies a stored theme choice before first paint. Without this the page
+     renders in the OS theme and then snaps to the reader's - a visible flash. -->
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<div class="wrap">
 
-  {% include head.html %}
+  <header class="masthead">
+    <h1 class="site-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+    <nav class="nav">
+      <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
+      <a href="{{ '/archive/' | relative_url }}"{% if page.url == '/archive/' %} aria-current="page"{% endif %}>Archive</a>
+      <a href="{{ '/feed.xml' | relative_url }}">Feed</a>
+      <button class="theme-toggle" type="button" hidden title="Switch theme"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.6a6.4 6.4 0 0 1 0 12.8z" fill="currentColor"/></svg></button>
+    </nav>
+  </header>
 
-  <body>
+  <main>
+{{ content }}
+  </main>
 
-    {% include sidebar.html %}
+  <footer class="foot"><span>&copy; {{ site.time | date: '%Y' }} {{ site.author.name }}</span></footer>
+</div>
 
-    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
-         content to avoid any CSS collisions with our real content. -->
-    <div class="wrap">
-      <div class="masthead">
-        <div class="container">
-          <h3 class="masthead-title">
-            <a href="{{ site.baseurl }}/" title="Home">{{ site.title }}</a>
-            <small>{{ site.tagline }}</small>
-          </h3>
-        </div>
-      </div>
-
-      <div class="container content">
-        {{ content }}
-      </div>
-    </div>
-
-    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
-
-    <script src='{{ site.baseurl }}/public/js/script.js'></script>
-  </body>
+<script>
+(function(){var root=document.documentElement,btn=document.querySelector('.theme-toggle');
+if(!btn)return;btn.hidden=false;
+function cur(){var s=root.getAttribute('data-theme');return s?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
+function label(){btn.setAttribute('aria-label','Switch to '+(cur()==='dark'?'light':'dark')+' theme')}
+label();
+btn.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';
+root.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}label()});
+})();
+</script>
+</body>
 </html>
