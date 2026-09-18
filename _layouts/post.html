@@ -6,7 +6,59 @@ layout: default
     <h1 class="post-title">{{ page.title }}</h1>
     <div class="post-date"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%b %-d, %Y' }}</time></div>
   </header>
+  {%- if page.lede %}
+  {%- comment %}
+    The lede again, as a standfirst. A reader arriving from the feed or a search
+    result has never seen the index, so this is the only place they meet it.
+  {%- endcomment %}
+  <p class="post-lede">{{ page.lede }}</p>
+  {%- endif %}
   <div class="post-body">
 {{ content }}
   </div>
 </article>
+
+<script>
+/* Builds the contents box from the article's h2s, so posts need nothing in their
+   markdown. Kramdown gives every heading an id already; this only fills gaps. */
+(function(){
+  var body = document.querySelector('.post-body');
+  if (!body) return;
+  var hs = [].slice.call(body.querySelectorAll('h2'));
+  if (hs.length < 4) return;   /* short pieces do not need navigation */
+
+  var nav = document.createElement('nav');
+  nav.className = 'toc';
+  nav.setAttribute('aria-label', 'On this page');
+  var t = document.createElement('p');
+  t.className = 'toc-title';
+  t.textContent = 'On this page';
+  nav.appendChild(t);
+
+  var ol = document.createElement('ol'), links = [];
+  hs.forEach(function(h, i){
+    if (!h.id) h.id = 'section-' + i;
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;   /* textContent, never innerHTML - heading markup is not trusted here */
+    var li = document.createElement('li');
+    li.appendChild(a); ol.appendChild(li); links.push(a);
+  });
+  nav.appendChild(ol);
+  body.parentNode.insertBefore(nav, body);
+
+  /* Highlight the last heading scrolled past rather than the first one visible -
+     that is where the reader actually is once inside a long section. */
+  var ticking = false;
+  function sync(){
+    ticking = false;
+    var active = 0;
+    hs.forEach(function(h, i){ if (h.getBoundingClientRect().top <= 120) active = i; });
+    links.forEach(function(a, i){ a.setAttribute('aria-current', i === active ? 'true' : 'false'); });
+  }
+  addEventListener('scroll', function(){
+    if (!ticking) { ticking = true; requestAnimationFrame(sync); }
+  }, { passive: true });
+  sync();
+})();
+</script>

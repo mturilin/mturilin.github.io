@@ -70,6 +70,26 @@ so structural layout changes must be made in both places. Liquid behaviour
 | `assets/img/` | Banner source plus its generated derivatives |
 | `tools/` | Local preview script and filler posts. Excluded from the Jekyll build |
 
+## Article furniture
+
+Two things are added to every post automatically — neither needs anything in the
+markdown.
+
+**The standfirst.** `lede:` is rendered again above the body, semibold. Readers
+arriving from RSS or a search result never see the index, so this is the only
+place the lede reaches them.
+
+**The contents box.** `_layouts/post.html` carries a small script that builds a
+nav from the article's `h2` elements. Kramdown gives every heading an `id`; the
+script fills any gap. Deliberate limits:
+
+- **`h2` only.** The current essay has 30 `h3`s under 11 `h2`s — a 41-entry list
+  is a wall, not a map.
+- **Fewer than four sections and no box appears.** Short posts do not need it.
+- **Above ~1340px it floats** in the right-hand margin and follows the reader,
+  highlighting the last heading scrolled past. Below that it becomes an inline
+  card at the top of the article, since a narrow viewport has no spare margin.
+
 ## Banner
 
 `assets/img/banner.png` is the 2048x768 source, kept in the repo so the artwork can

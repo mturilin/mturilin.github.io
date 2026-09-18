@@ -96,6 +96,26 @@
          "root.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}label()});\n"
          "})();\n</script>\n</body>\n</html>\n")))
 
+;; Mirrors the contents script in _layouts/post.html. Duplicated for the same
+;; reason as the page shell: Liquid cannot run here.
+(def toc-script
+  (str "<script>\n"
+       "(function(){var body=document.querySelector('.post-body');if(!body)return;\n"
+       "var hs=[].slice.call(body.querySelectorAll('h2'));if(hs.length<4)return;\n"
+       "var nav=document.createElement('nav');nav.className='toc';nav.setAttribute('aria-label','On this page');\n"
+       "var t=document.createElement('p');t.className='toc-title';t.textContent='On this page';nav.appendChild(t);\n"
+       "var ol=document.createElement('ol'),links=[];\n"
+       "hs.forEach(function(h,i){if(!h.id)h.id='section-'+i;\n"
+       "var a=document.createElement('a');a.href='#'+h.id;a.textContent=h.textContent;\n"
+       "var li=document.createElement('li');li.appendChild(a);ol.appendChild(li);links.push(a)});\n"
+       "nav.appendChild(ol);body.parentNode.insertBefore(nav,body);\n"
+       "var ticking=false;\n"
+       "function sync(){ticking=false;var active=0;\n"
+       "hs.forEach(function(h,i){if(h.getBoundingClientRect().top<=120)active=i});\n"
+       "links.forEach(function(a,i){a.setAttribute('aria-current',i===active?'true':'false')})}\n"
+       "addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(sync)}},{passive:true});\n"
+       "sync();})();\n</script>\n"))
+
 (defn item [{:keys [slug title date lede]}]
   (str "    <li>\n      <time>" (pretty-date date) "</time>\n"
        "      <a href=\"posts/" slug ".html\">" title "</a>\n"
@@ -133,13 +153,16 @@
                         (str "  <section class=\"year\">\n    <h2>" y "</h2>\n    <ul class=\"post-list\">\n"
                              (str/join (map item g)) "    </ul>\n  </section>\n")))}))
 
-(doseq [{:keys [slug title date html]} posts]
+(doseq [{:keys [slug title date html lede]} posts]
   (spit (str out "/posts/" slug ".html")
         ;; depth 1 so ../ resolves back to the preview root
         (layout {:title (str title " &middot; " site-title) :depth 1
                  :body (str "<article>\n  <header class=\"post-header\">\n"
                             "    <h1 class=\"post-title\">" title "</h1>\n"
                             "    <div class=\"post-date\"><time>" (pretty-date date) "</time></div>\n"
-                            "  </header>\n  <div class=\"post-body\">\n" html "  </div>\n</article>")})))
+                            "  </header>\n"
+                            (when lede (str "  <p class=\"post-lede\">" lede "</p>\n"))
+                            "  <div class=\"post-body\">\n" html "  </div>\n</article>\n"
+                            toc-script)})))
 
 (println (format "built %d post(s) -> %s/index.html" (count posts) out))

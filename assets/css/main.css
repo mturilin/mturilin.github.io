@@ -379,4 +379,86 @@ body {
   :root:not([data-theme="light"]) .banner img { filter: brightness(0.86) saturate(0.94); }
 }
 :root[data-theme="dark"] .banner img { filter: brightness(0.86) saturate(0.94); }
+/* ---- article contents ------------------------------------------- */
+/* Built client-side from the h2s in .post-body, so posts need nothing in their
+   markdown. Kramdown already gives every heading an id; the script adds one if
+   a renderer has not. Only h2 is indexed - this essay has 30 h3s beneath 11 h2s,
+   and a 41-entry list is a wall, not a map. */
 
+.toc {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 0.95rem 1.1rem;
+  margin: 0 0 2.75rem;
+}
+
+.toc-title {
+  font-size: 0.71rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.65rem;
+}
+
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc li { margin: 0 0 0.45rem; }
+.toc li:last-child { margin-bottom: 0; }
+
+.toc a {
+  display: block;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 0.65rem;
+  margin-left: -0.65rem;
+}
+.toc a:hover { color: var(--accent); }
+.toc a[aria-current="true"] {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+/* Wide viewports have unused margin either side of the 45rem column, so the box
+   leaves the flow and follows the reader in the right-hand margin. Its border-left
+   is the divider facing the text column. Below this breakpoint it stays an inline
+   card at the top of the article, which is all a phone has room for. */
+@media (min-width: 84rem) {
+  .toc {
+    position: fixed;
+    top: 4.5rem;
+    right: calc(50% - 22.5rem - 17rem);
+    width: 15rem;
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto;
+    margin: 0;
+    padding: 0 0 0 1rem;
+    border: 0;
+    border-left: 1px solid var(--rule);
+    border-radius: 0;
+  }
+}
+
+.post-body h2 { scroll-margin-top: 1.5rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ---- article standfirst ----------------------------------------- */
+/* The post's lede again, above the body: it is the promise the article makes,
+   and a reader arriving from a feed or a search result has not seen the index. */
+
+.post-lede {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.52;
+  letter-spacing: -0.005em;
+  color: var(--fg);
+  margin: 0 0 2.25rem;
+  text-wrap: pretty;
+}
